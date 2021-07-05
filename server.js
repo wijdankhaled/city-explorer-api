@@ -45,3 +45,6 @@ for(let i=0;i<selectedData.data.length;i++){
 
 })
 
+server.get('*',(req,res)=>{
+    res.status(404).send('the city not found')
+})
