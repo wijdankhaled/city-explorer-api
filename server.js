@@ -1,19 +1,19 @@
 'use strict';
 const express =require('express');
 require('dotenv').config();
-// const cors =require('cors');
+const cors =require('cors');
 
 const weather =require('./assets/weather.json')
 
 const server=express();
 const PORT =process.env.PORT;
-
+server.use(cors());
 
 server.listen(PORT,()=>{
     console.log(`listnin on PORT ${PORT}`)
 })
 //make it public to all client 
-// server.use(cors());
+
 
 let arr=[];
 class serv{
