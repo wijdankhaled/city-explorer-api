@@ -28,10 +28,8 @@ class serv{
 server.get('/weather',(req,res)=>{
     console.log(req.query)
     let cityname=req.query.cityname
-    let lon=req.query.lon
-    let lat=req.query.lat
     let selectedData=weather.find((w)=>{
-        if(w.cityname==cityname && w.lon==lon &&w.lat==lat){
+        if(w.cityname==cityname ){
             return w
         }
     })
