@@ -3,7 +3,7 @@ const express =require('express');
 require('dotenv').config();
 const cors =require('cors');
 const axios=require('axios');
-const weather =require('./assets/weather.json');
+// const weather =require('./assets/weather.json');
 // const { query } = require('express');
 
 const server=express();
@@ -24,6 +24,22 @@ class Forecatst{
         arr.push(this);
     }
 }
+
+let arrmoview=[];
+class Movies{
+    constructor(item){
+        this.title=item.title;
+        this.overview=item.overview;
+        this.average_votes=item.vote_average;
+        this.image_url=`https://image.tmdb.org/t/p/w500/${item.poster_path}`;
+        this.total_votes=item.vote_count;
+        this.image_url=item.image_url;
+        this.popularity=item.popularity;
+        this.released_on=item.release_date;
+        Moviesarray.push(this)
+     }
+}
+
 
 //http:localhost:3001/weather?cityName=Amman&lon=35.91&lat=31.95
 //
@@ -60,24 +76,40 @@ let weatherUrl=`https://api.weatherbit.io/v2.0/forecast/daily?city=${searchQ}&ke
 
 axios.get(weatherUrl).then(weatherData=>{
      selectedData=weatherData.data.data.map(w=>{
-        // if(w.city_name==searchQ ){
-        //     return new Forecatst(w);
-        // }
-
         return new Forecatst(w);
-        
     })
     console.log(selectedData);
-    // for(let i=0;i<selectedData.data.length;i++){
-    //     new serv(selectedData.data[i].weather.description,selectedData.data[i].valid_date)
-    // }
-    res.send(selectedData[0])
+    
+    res.send(selectedData)
+    .catch(error=>{
+        res.status(500).send(error)
+    })
    
 })
-// .catch(error=>{
-//     res.status(500).send(error)
-// })
+
 }
+
+let selectedMovie=[];
+//http:localhost:3001/movies?cityName=Amman
+server.get('/movies',getMovie);
+function getMovie(req,res){
+    let result=req.query.cityName;
+   let movieUrl=`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${result}`
+    
+    axios.get(movieUrl).then(movieData=>{
+        selectedMovie=movieData.data.results.map(w=>{
+            return new Movies(w);
+        })
+       
+    })
+    console.log(selectedMovie);
+    res.send(selectedMovie)
+   
+    .catch(error=>{
+        res.status(500).send(error)
+    })
+}
+
 
 server.get('*',(req,res)=>{
     res.status(404).send('the city not found')
