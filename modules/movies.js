@@ -3,29 +3,35 @@ const axios=require('axios')
 module.exports=getMovie;
 
 let selectedMovie=[];
+let datainmemory={};
 function getMovie(req,res){
     let result=req.query.cityName;
     // console.log(result);
    let movieUrl=`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIE_API_KEY}&query=${result}`
-
-    
-    axios.get(movieUrl).then(movieData=>{
-        selectedMovie=movieData.data.results.map(w=>{
-            console.log("poster_path",w.poster_path);
-            return new Movies(w);
-           
-        })
-        // console.log(selectedMovie);
-        res.send(selectedMovie);
-        // res.json(selectedMovie);
-    })
-   
-    
-   
-    .catch(error=>{
-        res.status(500).send(error,'No movie data for htis city')
-    })
+if(datainmemory[result]!==undefined){
+    console.log('retreive the data from api')
+    res.send(datainmemory[result])
 }
+    else{
+        axios.get(movieUrl).then(movieData=>{
+            selectedMovie=movieData.data.results.map(w=>{
+                console.log("poster_path",w.poster_path);
+                return new Movies(w);
+               
+            })
+            // console.log(selectedMovie);
+            res.send(selectedMovie);
+            // res.json(selectedMovie);
+        })
+       
+        
+       
+        .catch(error=>{
+            res.status(500).send(error,'No movie data for htis city')
+        })
+    }
+    }
+   
 
 class Movies{
     constructor(item){
