@@ -13,7 +13,12 @@ if(datainmemory[result]!==undefined){
     res.send(datainmemory[result])
 }
     else{
-        axios.get(movieUrl).then(movieData=>{
+        axios
+        .get(movieUrl)
+        .then(movieData=>{
+            console.log('data from api')
+            datainmemory[result]=movieData.data.results
+            
             selectedMovie=movieData.data.results.map(w=>{
                 console.log("poster_path",w.poster_path);
                 return new Movies(w);
